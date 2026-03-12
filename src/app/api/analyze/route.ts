@@ -67,7 +67,7 @@ async function scrapeDirectly(url: string): Promise<string | null> {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), DIRECT_TIMEOUT_MS);
     const resp = await fetch(url, {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; FitFinderBot/1.0)" },
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; ProspectIQBot/1.0)" },
       signal: controller.signal,
     });
     clearTimeout(timer);

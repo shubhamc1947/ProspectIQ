@@ -28,7 +28,7 @@ const Header = () => {
             <Crosshair className="w-4 h-4 text-primary" />
           </div>
           <span className="text-sm font-semibold text-foreground tracking-tight">
-            ICP Fit Analyzer
+            ProspectIQ
           </span>
         </Link>
 

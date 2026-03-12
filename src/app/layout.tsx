@@ -9,8 +9,8 @@ import Providers from "@/components/Providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ICP Fit Analyzer",
-  description: "Paste a company URL → get a structured B2B sales fit report in seconds.",
+  title: "ProspectIQ",
+  description: "Paste a company URL → get an AI-powered B2B sales fit report in seconds.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

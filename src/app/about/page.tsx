@@ -37,10 +37,10 @@ export default function AboutPage() {
           className="text-center mb-12"
         >
           <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight mb-4">
-            About ICP Fit Analyzer
+            About ProspectIQ
           </h1>
           <p className="text-muted-foreground text-base leading-relaxed max-w-lg mx-auto">
-            ICP Fit Analyzer helps B2B sales teams quickly evaluate whether a
+            ProspectIQ helps B2B sales teams quickly evaluate whether a
             company is worth pursuing — before spending time on research or outreach.
           </p>
         </motion.div>
