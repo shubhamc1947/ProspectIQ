@@ -1,73 +1,149 @@
-# Welcome to your Lovable project
+# ProspectIQ
 
-## Project info
+> Paste a company URL → get an AI-powered B2B sales fit report in seconds.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+ProspectIQ helps B2B sales teams instantly evaluate whether a prospect is worth pursuing — before spending time on research or outreach. Enter any company URL and receive a structured fit report with an ICP score, fit reasons, red flags, and a personalized opening line.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- **ICP Scoring** — 1–10 score showing how well a company matches your ideal customer profile
+- **Fit Reasons** — bullet-point breakdown of why the company is or isn't a good fit
+- **Red Flags** — potential deal-breakers surfaced automatically
+- **Opening Lines** — personalized outreach starters tailored to each company
+- **Dark / Light Mode** — system-aware theme with manual toggle
+- **Contact Form** — EmailJS-powered form with no backend required
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## Tech Stack
 
-**Use your preferred IDE**
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router) |
+| Styling | Tailwind CSS + shadcn/ui |
+| Animations | Framer Motion |
+| AI Model | Groq — Llama 3.3 70B Versatile |
+| Web Scraper | Jina.ai (`r.jina.ai`) + direct HTTP fallback |
+| Contact Form | EmailJS |
+| Theme | next-themes |
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Getting Started
 
-Follow these steps:
+### 1. Clone the repo
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+git clone https://github.com/shubhamc1947/prospectiq.git
+cd prospectiq
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 2. Install dependencies
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 3. Set up environment variables
+
+Create a `.env.local` file in the project root:
+
+```env
+# Groq API (required) — free tier at console.groq.com
+GROQ_API_KEY=your_groq_api_key_here
+
+# EmailJS (required for contact form) — free tier at emailjs.com
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+NEXT_PUBLIC_EMAILJS_USER_ID=your_public_key
+```
+
+### 4. Run the development server
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## Environment Variables
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+| Variable | Description | Required |
+|---|---|---|
+| `GROQ_API_KEY` | Groq API key for LLM inference | Yes |
+| `NEXT_PUBLIC_EMAILJS_SERVICE_ID` | EmailJS service ID | Yes (contact form) |
+| `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID` | EmailJS template ID | Yes (contact form) |
+| `NEXT_PUBLIC_EMAILJS_USER_ID` | EmailJS public key | Yes (contact form) |
 
-## What technologies are used for this project?
+Get your Groq API key for free at [console.groq.com](https://console.groq.com).
+Set up EmailJS at [emailjs.com](https://www.emailjs.com).
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## How It Works
 
-## How can I deploy this project?
+```
+User pastes URL
+      ↓
+Jina.ai scrapes the page (r.jina.ai/{url})
+      ↓ (fallback if Jina times out)
+Direct HTTP fetch + HTML tag stripping
+      ↓
+Groq (Llama 3.3 70B) analyzes the content
+      ↓
+Structured JSON report returned
+      ↓
+Results displayed: score, reasons, red flags, opener
+```
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+The API route lives at `src/app/api/analyze/route.ts` and handles everything server-side — no separate backend needed.
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## Project Structure
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```
+src/
+├── app/
+│   ├── api/
+│   │   └── analyze/
+│   │       └── route.ts        # Core API — scrape + Groq LLM
+│   ├── about/
+│   │   └── page.tsx
+│   ├── contact/
+│   │   └── page.tsx
+│   ├── layout.tsx
+│   ├── page.tsx                # Home / analyzer
+│   └── globals.css
+├── components/
+│   ├── ui/                     # shadcn/ui components
+│   ├── AnalyzerInput.tsx       # URL + context input form
+│   ├── ResultsCard.tsx         # Fit report display
+│   ├── Header.tsx
+│   ├── Footer.tsx
+│   ├── ThemeToggle.tsx
+│   └── Providers.tsx
+└── lib/
+    └── utils.ts
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## Deployment
+
+Deploy instantly to Vercel:
+
+1. Push your code to GitHub
+2. Import the repo at [vercel.com/new](https://vercel.com/new)
+3. Add all environment variables from `.env.local` in the Vercel dashboard
+4. Deploy
+
+---
+
+## License
+
+MIT
