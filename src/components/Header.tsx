@@ -1,10 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Crosshair } from "lucide-react";
+import { Crosshair, Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -14,6 +15,10 @@ const navItems = [
 
 const Header = () => {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <motion.header
@@ -23,7 +28,8 @@ const Header = () => {
       className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-lg"
     >
       <div className="max-w-5xl mx-auto flex items-center justify-between px-4 h-14">
-        <Link href="/" className="flex items-center gap-2.5 group">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 group" onClick={closeMenu}>
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 dark:bg-primary/20 transition-colors group-hover:bg-primary/20 dark:group-hover:bg-primary/30">
             <Crosshair className="w-4 h-4 text-primary" />
           </div>
@@ -32,7 +38,8 @@ const Header = () => {
           </span>
         </Link>
 
-        <nav className="flex items-center gap-1">
+        {/* Desktop Nav */}
+        <nav className="hidden sm:flex items-center gap-1">
           {navItems.map((item) => {
             const isActive = pathname === item.path;
             return (
@@ -60,7 +67,53 @@ const Header = () => {
             <ThemeToggle />
           </div>
         </nav>
+
+        {/* Mobile: Theme toggle + Hamburger */}
+        <div className="flex sm:hidden items-center gap-2">
+          <ThemeToggle />
+          <button
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+            className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+          >
+            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Dropdown Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
+            className="sm:hidden overflow-hidden border-t border-border bg-background/95 backdrop-blur-lg"
+          >
+            <nav className="flex flex-col px-4 py-3 gap-1">
+              {navItems.map((item) => {
+                const isActive = pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    onClick={closeMenu}
+                    className={`px-3 py-2.5 text-sm font-medium rounded-md transition-colors duration-200 ${
+                      isActive
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 };
